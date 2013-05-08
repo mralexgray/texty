@@ -25,7 +25,7 @@
 - (void)readPipe:(NSNotification *)notification {
 	NSFileHandle *fh = [notification object];
 	NSData *data;
-	data = [[notification userInfo] objectForKey:NSFileHandleNotificationDataItem];
+	data = [notification userInfo][NSFileHandleNotificationDataItem];
 	if ([data length]){
 		[self send:data];
 		[fh readInBackgroundAndNotify];
@@ -68,7 +68,7 @@
 
 - (void) run {
 	[task setLaunchPath: @"/bin/sh"];
-	NSArray *arguments = [NSArray arrayWithObjects: @"-c", _command,nil];
+	NSArray *arguments = @[@"-c", _command];
 	[task setArguments: arguments];
     [task setCurrentDirectoryPath:[@"~" stringByExpandingTildeInPath]];
 	[task setStandardInput: pty.slave];

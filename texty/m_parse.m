@@ -288,15 +288,14 @@ next:
 	return NO;
 }
 - (void) initSyntax:(NSString *) ext box:(NSBox *) box{
-#define SET_BLOCK(_b,_begin,_begin_prev,_end,_end_prev,_color,_flags) 		\
-do {																		\
-	_b = &_syntax_blocks.b[_begin];											\
-	_b->char_begin = _begin;												\
-	_b->char_begin_prev = _begin_prev;										\
-	_b->char_end = _end;													\
-	_b->char_end_prev = _end_prev;											\
-	_b->color = _color;														\
-	_b->flags = _flags;														\
+#define SET_BLOCK(_b,_begin,_begin_prev,_end,_end_prev,_color,_flags) 	\
+do {	_b 						= &_syntax_blocks.b[_begin];						\
+		_b->char_begin 		= _begin;												\
+		_b->char_begin_prev 	= _begin_prev;											\
+		_b->char_end			= _end;													\
+		_b->char_end_prev 	= _end_prev;											\
+		_b->color 				= _color;												\
+		_b->flags 				= _flags;												\
 } while (0);
 
 	hash_init(&hash[0]);
@@ -310,25 +309,25 @@ do {																		\
 	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"SyntaxDef" ofType:@"plist"]];
 	NSDictionary *item,*keywords;
 	NSString *value;
-	if ((item = [d objectForKey:ext])) {
-		if ((value = [item objectForKey:@"COPY"])) {
-			item = [d objectForKey:value];
+	if ((item = d[ext])) {
+		if ((value = item[@"COPY"])) {
+			item = d[value];
 			if (!item) {
 				/* this should not happen */
 				return;
 			}
 		}
 		_syntax_color = 1;
-		_syntax_color_numbers = ([item objectForKey:@"color_numbers"] ? YES : NO);
-		[box setHidden:([item objectForKey:@"display_box"] ? NO : YES)];		
-		if ((keywords = [item objectForKey:@"keywords"])) {
+		_syntax_color_numbers = (item[@"color_numbers"] ? YES : NO);
+		[box setHidden:(item[@"display_box"] ? NO : YES)];		
+		if ((keywords = item[@"keywords"])) {
 			for (NSString *k in [keywords allKeys]) {
-				[self addKeywords:[keywords objectForKey:k] withColor:[k intValue]];
+				[self addKeywords:keywords[k] withColor:[k intValue]];
 			}
 		}
-		if ((item = [item objectForKey:@"var_symbols"])) {
+		if ((item = item[@"var_symbols"])) {
 			for (NSString *k in [item allKeys]) {
-				for (NSString *val in [[item objectForKey:k] componentsSeparatedByString:@" "]) {
+				for (NSString *val in [item[k] componentsSeparatedByString:@" "]) {
 					unichar c = [val characterAtIndex:0];
 					_syntax_var_symbol[c & B_TABLE_MASK].color = [k intValue];
 				}

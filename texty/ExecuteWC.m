@@ -59,7 +59,7 @@
 	} 
 	NSDate *now = [NSDate date];
 	NSTimeInterval diff = [now timeIntervalSinceDate:e._startTime];
-	[self taskAddExecuteText:[NSString stringWithFormat:@"\nEND : [%@ - took: %llfs] TASK(RC: %d%@): %@\n",now,diff,e._rc,timedOut,e._command]];
+	[self taskAddExecuteText:[NSString stringWithFormat:@"\nEND : [%@ - took: %fs] TASK(RC: %d%@): %@\n",now,diff,e._rc,timedOut,e._command]];
 	[input setEnabled:NO];
 
 	NSInteger max = NSMaxRange(lastColorRange);
@@ -80,8 +80,8 @@
 	[output setFont:FONT];
 	[output setTextColor:TEXT_COLOR];
 	NSMutableDictionary *selected = [[output selectedTextAttributes] mutableCopy];
-	[selected setObject:BG_COLOR forKey:NSForegroundColorAttributeName];
-	[selected setObject:TEXT_COLOR forKey:NSBackgroundColorAttributeName];
+	selected[NSForegroundColorAttributeName] = BG_COLOR;
+	selected[NSBackgroundColorAttributeName] = TEXT_COLOR;
 	[output setSelectedTextAttributes:selected];
 	[output setBackgroundColor:BG_COLOR];
 	[output setInsertionPointColor:CURSOR_COLOR];

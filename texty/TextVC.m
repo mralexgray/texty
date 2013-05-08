@@ -6,14 +6,8 @@
 @implementation TextVC
 @synthesize tabItem,s,parser,text,scroll,ewc;
 
-+ (void) scrollEnd:(NSTextView *) tv {
-	NSRange range = { [[tv string] length], 0 };
-	[tv scrollRangeToVisible: range];
-}
-- (void) changed_under_my_nose:(NSURL *) file {
-		if (locked == NO)
-			[self performSelectorOnMainThread:@selector(lockText) withObject:nil waitUntilDone:YES];
-}
++ (void) scrollEnd:(NSTextView *) tv {	NSRange range = { [[tv string] length], 0 };	[tv scrollRangeToVisible: range];	}
+- (void) changed_under_my_nose:(NSURL *) file {		if (locked == NO)	[self performSelectorOnMainThread:@selector(lockText) withObject:nil waitUntilDone:YES];	}
 - (void) signal {
 	if (need_to_autosave) {
 		if (time(NULL) - autosave_ts > [Preferences defaultAutoSaveInterval]) {
@@ -65,7 +59,7 @@
 	[text setBackgroundColor:[NSColor darkGrayColor]];
 	[text setEditable:NO];	
 }
-- (id) initWithFrame:(NSRect) frame {
+-   (id) initWithFrame:(NSRect) frame {
     self = [super init];
     if (self) {
 		self.s = [[m_Storage alloc] init];
@@ -90,15 +84,15 @@
     }
     return self;
 }
-- (void) responder {
+- (void) responder 				{
 	[text setSelectedRange:NSMakeRange(0, 0)];
 	[scroll becomeFirstResponder];
 }
-- (void) syntax_reload {
-	[text.parser initSyntax:[[s basename] pathExtension] box:text._box];
+- (void) syntax_reload	 		{
+	[text.parser initSyntax:s.basename.pathExtension box:text._box];
 	[text delayedParse];
 }
-- (BOOL) saveAs:(NSURL *) to {
+- (BOOL) saveAs:(NSURL *) to 	{
 	if ([s migrate:to withString:[text string] autosaving:NO]) {
 		[self syntax_reload];
 		[self label:L_DEFAULT];
@@ -106,13 +100,13 @@
 	}
 	return NO;
 }
-- (BOOL) save {
+- (BOOL) save 						{
 	return [self saveAs:s.fileURL];
 }
-- (void) revertToSaved {
+- (void) revertToSaved	 		{
 	[text setString:s.data];
 }
-- (BOOL) is_modified {
+- (BOOL) is_modified 			{
 	return ![[text string] isEqualToString:s.data];
 }
 - (void) goto_line:(NSInteger) want_line {
@@ -122,14 +116,14 @@
 		[text scrollRangeToVisible: area];
 	}
 }
-- (void) reload {
+- (void) reload 					{
 	[text setString:s.data];
 	[self label:L_DEFAULT];
 	[self performSelector:@selector(responder) withObject:self afterDelay:0];
 	[self syntax_reload];
 
 }
-- (BOOL) open:(NSURL *)file {
+- (BOOL) open:(NSURL *)file	{
 	if ([s open:file]) {
 		[self reload];
         [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
@@ -173,6 +167,8 @@
 		[self run:[NSString stringWithFormat:@"gcc -Wall -o %@ %@ && %@",noext,path,noext] withTimeout:0];		
 	else if ([ext isEqualToString:@"cpp"])
 		[self run:[NSString stringWithFormat:@"g++ -Wall -o %@ %@ && %@",noext,path,noext] withTimeout:0];		
+	else if ([ext isEqualToString:@"m"])
+		[self run:[NSString stringWithFormat:@"clang -w -framework AtoZ -framework Cocoa -framework Foundation -o %@ %@ && %@",noext,path,noext] withTimeout:0];		
 	else {
 		NSFileManager *f = [[NSFileManager alloc] init];
 		if ([f isExecutableFileAtPath:path]) {
@@ -194,7 +190,5 @@
 	[ewc.e terminate];
 	self.ewc = nil;
 }
-- (void) textDidChange:(NSNotification *)notification {
-    something_changed = YES;
-}
+- (void) textDidChange:(NSNotification *)notification {    something_changed = YES;		}
 @end

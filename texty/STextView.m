@@ -5,7 +5,7 @@
 - (STextView *) initWithFrame:(NSRect) frame {
 	self = [super initWithFrame:frame];
 	if (self) {
-		NSSize char_size = [[NSString stringWithString:@" "] sizeWithAttributes: [NSDictionary dictionaryWithObject:FONT forKey: NSFontAttributeName]];	
+		NSSize char_size = [@" " sizeWithAttributes: @{NSFontAttributeName: FONT}];	
 		[self setMinSize:NSMakeSize(0.0, frame.size.height)];
 		[self setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
 		[self setVerticallyResizable:YES];
@@ -25,15 +25,15 @@
 		NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
 		[para setLineSpacing:NSLineBreakByTruncatingHead];
 		[para setDefaultTabInterval:(char_size.width * 8)];
-		[para setTabStops:[NSArray array]];			
+		[para setTabStops:@[]];			
 		[self setDefaultParagraphStyle:para];
-		[self setTypingAttributes:[NSDictionary dictionaryWithObject:para forKey:NSParagraphStyleAttributeName]];
+		[self setTypingAttributes:@{NSParagraphStyleAttributeName: para}];
 		[self setFont:FONT];
 		[self setRichText:NO];
 		[self setTextColor:TEXT_COLOR];
 		[self setCanDrawConcurrently:NO];
-		[selected setObject:BG_COLOR forKey:NSForegroundColorAttributeName];
-		[selected setObject:TEXT_COLOR forKey:NSBackgroundColorAttributeName];
+		selected[NSForegroundColorAttributeName] = BG_COLOR;
+		selected[NSBackgroundColorAttributeName] = TEXT_COLOR;
 		[self setSelectedTextAttributes:selected];
 		[self setBackgroundColor:BG_COLOR];
 		[self setInsertionPointColor:CURSOR_COLOR];
@@ -357,12 +357,12 @@
 }
 
 - (void) clearColors:(NSRange) area{	
-	NSLayoutManager *lm = [[self.textStorage layoutManagers] objectAtIndex: 0];
+	NSLayoutManager *lm = [self.textStorage layoutManagers][0];
 	[lm setTemporaryAttributes:colorAttr[TEXT_COLOR_IDX] forCharacterRange:area];
 }
 
 - (void) color:(NSRange) range withColor:(unsigned char) color{
-	NSLayoutManager *lm = [[self.textStorage layoutManagers] objectAtIndex: 0];
+	NSLayoutManager *lm = [self.textStorage layoutManagers][0];
 	[lm setTemporaryAttributes:colorAttr[color] forCharacterRange:range];
 }
 - (void) delayedParse {

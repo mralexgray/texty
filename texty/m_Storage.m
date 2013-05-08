@@ -70,13 +70,13 @@ success:
 	NSMutableArray *e = [NSMutableArray array];
 	const NSStringEncoding * encodings = [NSString availableStringEncodings];
 	while (*encodings) {
-		[e addObject:[NSArray arrayWithObjects:[NSString localizedNameOfStringEncoding:*encodings],[NSNumber numberWithLong:*encodings],nil]];
+		[e addObject:@[[NSString localizedNameOfStringEncoding:*encodings],[NSNumber numberWithLong:*encodings]]];
 		encodings++;
 	}
 	[e sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
 		NSString *a, *b;
-		a = [obj1 objectAtIndex:0];
-		b = [obj2 objectAtIndex:0];
+		a = obj1[0];
+		b = obj2[0];
 		if ([a isGreaterThan:b])
 			return NSOrderedDescending;
 		if ([a isLessThan:b])
@@ -175,7 +175,7 @@ success:
 	NSString *dir = [[Preferences defaultDir] stringByAppendingPathComponent:[NSString stringWithFormat:@"TEMPORARY/%@",[formatter stringFromDate:[NSDate date]]]];
 ret:
 	
-	name = [dir stringByAppendingPathComponent: [NSString stringWithFormat: @"TEMP-%lu.%ld.txt",time(NULL),random()]];
+	name = [dir stringByAppendingPathComponent: [NSString stringWithFormat: @"TEMP-%lu.%ld.m",time(NULL),random()]];
 	NSFileManager *f = [[NSFileManager alloc] init];
 	if ([f fileExistsAtPath:name]) {
 		retry--;

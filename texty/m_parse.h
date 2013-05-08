@@ -13,27 +13,27 @@
 #define WORD_ALPHA_UPPER 	2
 #define WORD_NUMBER			4
 #define WORD_OTHER			8
-#define WORD_DASH			16
+#define WORD_DASH				16
 #define WORD_VARSYMBOL		32
 #define WORD_ENDED			64
 #define WORD_CONTINUE		128
 #define WORD_SHARP			256
 
-#define B_TABLE_SIZE		256
-#define B_TABLE_MASK		B_TABLE_SIZE - 1
+#define B_TABLE_SIZE			256
+#define B_TABLE_MASK			B_TABLE_SIZE - 1
 #define B_ENDS_WITH_NEW_LINE 	1
 #define B_COMMENT 				2
 #define B_STRING_1 				4
 #define B_STRING_2 				8
 #define B_SHOW_VAR				16
-#define B_NO_VAR				32
+#define B_NO_VAR					32
 #define B_SHOW_KEYWORD			64
-#define B_NO_KEYWORD			128
-#define B_SUPERBLOCK			256
+#define B_NO_KEYWORD				128
+#define B_SUPERBLOCK				256
 #define B_REQUIRE_SUPERBLOCK	512
 #define BLOCK_BEGINS 	1
 #define BLOCK_ENDS 		2
-#define MIN_WORD_LEN	1
+#define MIN_WORD_LEN		1
 
 struct block {
 	NSRange range;
@@ -79,14 +79,11 @@ struct var_symbol {
 	char color;
 	char required_len;
 };
-#define Q_APPEND(_q,_m)                         \
-do {                                            \
-        if (_q->head == NULL)                   \
-                _q->head = _m;                  \
-        else                                    \
-                _q->tail->next = _m;            \
-        _q->tail = _m;                          \
-        _m->next = NULL;                        \
+#define Q_APPEND(_q,_m)                         	\
+do {	if (_q->head == NULL) _q->head = _m;    		\
+      else		             _q->tail->next = _m;	\
+      _q->tail = _m;                          		\
+      _m->next = NULL;                        		\
 } while (0);
 
 

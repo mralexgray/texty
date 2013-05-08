@@ -4,7 +4,7 @@
 #define DIRECTION_RIGHT 2
 #define DEFAULT_OPEN_DIR @"Code"
 #define DEFAULT_EXECUTE_TIMEOUT 1
-#define FONT [NSFont fontWithName:@"Monaco" size:12]
+#define FONT [NSFont fontWithName:@"UbuntuMono-Bold" size:15]
 #define LINE_80_COLOR RGB(150, 150, 150) 
 #define TEXT_COLOR RGB(0xE0,0xE2,0xE4)
 #define BG_COLOR RGB(0x00,0x00,0x00)

@@ -7,10 +7,8 @@
 	return [self initWithFrame:[[NSApp mainWindow] frame]];
 }
 - (void) createCodeSnipplets {
-	NSMutableArray *a = [NSMutableArray array];
-	[a addObject:[NSArray arrayWithObjects:@"c template", @"#include <stdio.h>\n\nint main(int ac, char *av[]) {\n\n\n\treturn 0;\n}" ,[NSNumber numberWithInt:0],nil]];
-
-	self.snipplet = [NSArray arrayWithArray:a];
+	self.snipplet = @	[@[@"c template", @"#include <stdio.h>\n\nint main(int ac, char *av[]) {\n\n\n\treturn 0;\n}" ,@0],
+							@[@"objc template", @"#import <Foundation/Foundation.h>\n#import <AtoZ/AtoZ.h>\n\nint main(int argc, char *argv[]) {\n	@autoreleasepool {\n\n		NSLog(@\"Poop\");\t}\treturn 0;\n}",@1]].mutableCopy;	
 }
 
 - (m_tabManager *) initWithFrame:(NSRect) frame {
@@ -27,18 +25,18 @@
 					repeats: YES];
 
 		[self createCodeSnipplets];
-		colorAttr[VARTYPE_COLOR_IDX] = [NSDictionary dictionaryWithObject:VARTYPE_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[VALUE_COLOR_IDX] = [NSDictionary dictionaryWithObject:VALUE_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[KEYWORD_COLOR_IDX] = [NSDictionary dictionaryWithObject:KEYWORD_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[COMMENT_COLOR_IDX] = [NSDictionary dictionaryWithObject:COMMENT_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[STRING1_COLOR_IDX] = [NSDictionary dictionaryWithObject:STRING1_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[STRING2_COLOR_IDX] = [NSDictionary dictionaryWithObject:STRING2_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[PREPROCESS_COLOR_IDX] = [NSDictionary dictionaryWithObject:PREPROCESS_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[CONDITION_COLOR_IDX] = [NSDictionary dictionaryWithObject:CONDITION_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[TEXT_COLOR_IDX] = [NSDictionary dictionaryWithObject:TEXT_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[CONSTANT_COLOR_IDX] = [NSDictionary dictionaryWithObject:CONSTANT_COLOR forKey:NSForegroundColorAttributeName];
-		colorAttr[BRACKET_COLOR_IDX] = [NSDictionary dictionaryWithObject:VARTYPE_COLOR forKey:NSBackgroundColorAttributeName];
-		colorAttr[NOBRACKET_COLOR_IDX] = [NSDictionary dictionaryWithObject:BG_COLOR forKey:NSBackgroundColorAttributeName];
+		colorAttr[VARTYPE_COLOR_IDX] = @{NSForegroundColorAttributeName: VARTYPE_COLOR};
+		colorAttr[VALUE_COLOR_IDX] = @{NSForegroundColorAttributeName: VALUE_COLOR};
+		colorAttr[KEYWORD_COLOR_IDX] = @{NSForegroundColorAttributeName: KEYWORD_COLOR};
+		colorAttr[COMMENT_COLOR_IDX] = @{NSForegroundColorAttributeName: COMMENT_COLOR};
+		colorAttr[STRING1_COLOR_IDX] = @{NSForegroundColorAttributeName: STRING1_COLOR};
+		colorAttr[STRING2_COLOR_IDX] = @{NSForegroundColorAttributeName: STRING2_COLOR};
+		colorAttr[PREPROCESS_COLOR_IDX] = @{NSForegroundColorAttributeName: PREPROCESS_COLOR};
+		colorAttr[CONDITION_COLOR_IDX] = @{NSForegroundColorAttributeName: CONDITION_COLOR};
+		colorAttr[TEXT_COLOR_IDX] = @{NSForegroundColorAttributeName: TEXT_COLOR};
+		colorAttr[CONSTANT_COLOR_IDX] = @{NSForegroundColorAttributeName: CONSTANT_COLOR};
+		colorAttr[BRACKET_COLOR_IDX] = @{NSBackgroundColorAttributeName: VARTYPE_COLOR};
+		colorAttr[NOBRACKET_COLOR_IDX] = @{NSBackgroundColorAttributeName: BG_COLOR};
 		
 		if (![self openStoredURLs]) {
 			[self open:nil];
@@ -239,7 +237,7 @@
 - (IBAction)commentSelection:(id)sender {
 	NSString *commentSymbol;
 	CURRENT(t);
-	if ([t extIs:[NSArray arrayWithObjects:@"c", @"h",@"m",@"cpp",@"java",nil]]) {
+	if ([t extIs:@[@"m",@"h",@"c", @"h",@"m",@"cpp",@"java"]]) {
 		commentSymbol = @"//";
 	} else {
 		commentSymbol = @"#";
@@ -343,8 +341,8 @@
 	CURRENT(t);
 	NSMenuItem *m = sender;
 	NSInteger idx = m.tag;	
-	NSArray *snip = [snipplet objectAtIndex:idx];
-	NSString *value = [NSString stringWithFormat:@"%@\n",[snip objectAtIndex:1]];	
+	NSArray *snip = snipplet[idx];
+	NSString *value = [NSString stringWithFormat:@"%@\n",snip[1]];	
 	[t.text insertAtBegin:value];
 }
 - (void) menuWillOpen:(NSMenu *)menu {
@@ -364,9 +362,9 @@
 		[menu addItem:m];
 		[menu addItem:[NSMenuItem separatorItem]];
 		for (NSArray *a in t.s.encodings) {
-			NSString *title = [a objectAtIndex:0];
+			NSString *title = a[0];
 			m = [[NSMenuItem alloc] initWithTitle:title action:@selector(encoding_button:) keyEquivalent:@""];
-			[m setTag:[[a objectAtIndex:1] intValue]];
+			[m setTag:[a[1] intValue]];
 			[m setTarget:self];
 			[menu addItem:m];
 			[m setEnabled:YES];	
@@ -374,7 +372,7 @@
 	} else if ([[menu title] isEqualToString:@"Snipplets"]) {
 		[menu removeAllItems];
 		for (NSArray *a in snipplet) {
-			NSString *title = [a objectAtIndex:0];
+			NSString *title = a[0];
 			NSMenuItem *m = [[NSMenuItem alloc] initWithTitle:title action:@selector(snipplet_button:) keyEquivalent:@""];
 			[m setTag:[snipplet indexOfObject:a]];
 			[m setTarget:self];
