@@ -13,7 +13,7 @@
 	IBOutlet NSTextField *input;
 	NSRange lastColorRange;
 }
-@property (retain) m_exec *e;
+@property (strong) m_exec *e;
 - (void) execute:(NSString *) command withTimeout:(int)timeout;
 - (IBAction)action:(id)sender;
 - (void) fixModalTextView;

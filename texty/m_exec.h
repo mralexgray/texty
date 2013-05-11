@@ -17,15 +17,15 @@
 	PseudoTTY *pty;
 	NSLock *serial;
 }
-@property (retain) PseudoTTY *pty;
-@property (assign) id <m_execDelegate> delegate;
-@property (retain) NSTask *task;
-@property (retain) NSDate *_startTime;
+@property (strong) PseudoTTY *pty;
+@property (unsafe_unretained) id <m_execDelegate> delegate;
+@property (strong) NSTask *task;
+@property (strong) NSDate *_startTime;
 @property (assign) int _rc;
-@property (retain) NSString * _command;
+@property (strong) NSString * _command;
 @property (assign) BOOL _terminated;
 @property (assign) int _timeout;
-@property (retain) NSLock *serial;
+@property (strong) NSLock *serial;
 - (void) sendSignal:(int) signal;
 - (void) terminate;
 - (void) readPipe:(NSNotification *)notification;

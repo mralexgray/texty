@@ -57,7 +57,7 @@ success:
 	if (!temporary)
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:self.fileURL];
 	self.existing_backups = [self backups];
-	[[FileWatcher shared] watch:self.fileURL notify:self];
+	[FileWatcher.sharedInstance watch:self.fileURL notify:self];
 	return TRUE;
 }
 - (NSString *) encodingName:(NSStringEncoding) enc{
@@ -115,12 +115,12 @@ success:
 
 	if (!autosaving)
 		self.temporary = NO;
-	[[FileWatcher shared] unwatch:to];	/* XXX: race */
+	[FileWatcher.sharedInstance unwatch:to];	/* XXX: race */
 	if ([self write:string toURL:to]) {
 		if (!temporary)
 			[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:to];
-		[[FileWatcher shared] unwatch:self.fileURL];
-		[[FileWatcher shared] watch:to notify:self];			
+		[FileWatcher.sharedInstance unwatch:self.fileURL];
+		[FileWatcher.sharedInstance watch:to notify:self];			
 		self.fileURL = to;
 		self.data = [NSString stringWithString:string];	
 		return YES;
@@ -234,7 +234,7 @@ ret:
 	return (err ? NO : YES);
 }
 - (void) close {
-	[[FileWatcher shared] unwatch:self.fileURL];
+	[FileWatcher.sharedInstance unwatch:self.fileURL];
 	if ([self.data length] < 1) {
 		[self unlinkIfTemporary];
 	}

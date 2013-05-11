@@ -1,4 +1,6 @@
 #import "ExecuteWC.h"
+#import <AtoZ/AtoZ.h>
+
 @implementation ExecuteWC
 @synthesize e;
 - (id) init {
@@ -6,6 +8,7 @@
 	if (self) {
 		self.e = [[m_exec alloc] init];
 		e.delegate = self;
+		self.window.sticksToEdge = YES;
 	}
 	return self;
 }

@@ -2,9 +2,9 @@
 #import "m_tabManager.h"
 #import "Preferences.h"
 @interface textyAppDelegate : NSObject <NSApplicationDelegate,NSWindowDelegate> {
-	m_tabManager IBOutlet *tab;
+	m_tabManager IBOutlet *_tab;
 }
-
-@property (assign) IBOutlet NSWindow *window;
-@property (retain) m_tabManager *tab;
+@property (weak) IBOutlet NSWindow *window;
+@property (strong) m_tabManager *tab;
+@property (weak) IBOutlet BGHUDProgressIndicator *working;
 @end

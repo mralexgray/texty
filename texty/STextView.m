@@ -1,59 +1,59 @@
 #import "STextView.h"
+#import <AtoZ/AtoZ.h>
 
 @implementation STextView
 @synthesize _box,_auto_indent,um,parser;
+
 - (STextView *) initWithFrame:(NSRect) frame {
-	self = [super initWithFrame:frame];
-	if (self) {
-		NSSize char_size = [@" " sizeWithAttributes: @{NSFontAttributeName: FONT}];	
-		[self setMinSize:NSMakeSize(0.0, frame.size.height)];
-		[self setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
-		[self setVerticallyResizable:YES];
-		[self setHorizontallyResizable:YES];
-		[self setAutoresizingMask:NSViewWidthSizable];
-		self.allowsUndo = YES;
-		[self setUsesRuler:NO];
-		self.usesFindBar = YES;
-		[self.textStorage setParagraphs:nil];
-		[self setAutomaticDashSubstitutionEnabled:NO];
-		[self setAutomaticQuoteSubstitutionEnabled:NO];
-		[self setAutomaticLinkDetectionEnabled:NO];
-		[self setAutomaticSpellingCorrectionEnabled:NO];
-		[self setAutomaticTextReplacementEnabled:NO];
-		[self setImportsGraphics:NO];
-		NSMutableDictionary *selected = [[self selectedTextAttributes] mutableCopy];
-		NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
-		[para setLineSpacing:NSLineBreakByTruncatingHead];
-		[para setDefaultTabInterval:(char_size.width * 8)];
-		[para setTabStops:@[]];			
-		[self setDefaultParagraphStyle:para];
-		[self setTypingAttributes:@{NSParagraphStyleAttributeName: para}];
-		[self setFont:FONT];
-		[self setRichText:NO];
-		[self setTextColor:TEXT_COLOR];
-		[self setCanDrawConcurrently:NO];
-		selected[NSForegroundColorAttributeName] = BG_COLOR;
-		selected[NSBackgroundColorAttributeName] = TEXT_COLOR;
-		[self setSelectedTextAttributes:selected];
-		[self setBackgroundColor:BG_COLOR];
-		[self setInsertionPointColor:CURSOR_COLOR];
-		NSRect boxRect = frame;
-		boxRect.size.width = 1;
-		boxRect.origin.y = 0;
-		boxRect.origin.x +=  char_size.width * 80;
-		self._box = [[NSBox alloc] initWithFrame:boxRect];
-		[_box setBoxType:NSBoxCustom];
-		_box.fillColor = [NSColor clearColor];
-		_box.borderType =  NSLineBorder;
-		_box.borderColor = LINE_80_COLOR;
-		[_box setTitlePosition:NSNoTitle];
-		[_box setAutoresizingMask:NSViewHeightSizable];
-		[_box setTransparent:NO];
-		[_box setHidden:YES];
-		self.parser = [[m_parse alloc] init];
-		self.um = [[NSUndoManager alloc] init];
-		[self addSubview:_box];
-	}
+
+	if (self != [super initWithFrame:frame]) return nil;
+	NSSize char_size = [@" " sizeWithAttributes: @{NSFontAttributeName: FONT}];	
+	[self setMinSize:NSMakeSize(0.0,   self.height)];
+	[self setMaxSize:  NSMakeSize(FLT_MAX, FLT_MAX)];
+	[self setVerticallyResizable:					  YES];
+	[self setHorizontallyResizable:				  YES];
+	[self setAutoresizingMask:   NSViewWidthSizable];
+	[self setAllowsUndo:								  YES];
+	[self setUsesRuler:									NO];
+	[self setUsesFindBar:							  YES];
+	[self setAutomaticDashSubstitutionEnabled: 	NO];
+	[self setAutomaticQuoteSubstitutionEnabled:	NO];
+	[self setAutomaticLinkDetectionEnabled:	 	NO];
+	[self setAutomaticSpellingCorrectionEnabled:	NO];
+	[self setAutomaticTextReplacementEnabled:		NO];
+	[self setImportsGraphics:							NO];
+	[self.textStorage 			   setParagraphs:nil];
+	NSMutableDictionary *selected = self.selectedTextAttributes.mutableCopy;
+	NSMutableParagraphStyle *para = NSMutableParagraphStyle.new;
+	[para setLineSpacing:NSLineBreakByTruncatingHead];
+	[para setDefaultTabInterval:(char_size.width * 4)];
+	[para setTabStops:									@[]];			
+	[self setDefaultParagraphStyle:				  para];
+	[self setTypingAttributes:@{NSParagraphStyleAttributeName: para}];
+	[self setFont:										  FONT];
+	[self setRichText:									 NO];
+	[self setTextColor:						  TEXT_COLOR];
+	[self setCanDrawConcurrently:						 NO];
+	selected[NSForegroundColorAttributeName] = BG_COLOR;
+	selected[NSBackgroundColorAttributeName] = TEXT_COLOR;
+	[self 		  setSelectedTextAttributes:selected];
+	[self                setBackgroundColor:BG_COLOR];
+	[self        setInsertionPointColor:CURSOR_COLOR];
+	NSRect boxRect = frame;
+	boxRect.size.width = 1;
+	boxRect.origin.y = 0;
+	boxRect.origin.x +=  char_size.width * 80;
+	[self addSubview:self._box = [BGHUDBox.alloc initWithFrame:boxRect]];
+	[_box setBoxType:							 NSBoxCustom];
+	[_box setFillColor: [NSColor colorWithCalibratedRed:0.916 green:0.365 blue:0.027 alpha:1.000]];
+	[_box setBorderType:  					  NSNoBorder];
+	//NSLineBorder;	_box.borderColor = LINE_80_COLOR;
+	[_box setTitlePosition:					   NSNoTitle];
+	[_box setAutoresizingMask:	  NSViewHeightSizable];
+	[_box setTransparent:								 NO];
+	[_box setHidden:										YES];
+	self.parser = m_parse.new;
+	self.um = NSUndoManager.new;
 	return self;
 }
 - (void) selectMove:(int) spots {
@@ -186,51 +186,43 @@
 
 - (NSInteger) numberOfLines {
 	__block NSUInteger total_lines = 1;
-	[[self string] enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
+	[self.string enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
 		total_lines++;
 	}];
 	return total_lines;
 }
-
 - (void) insertAtBegin:(NSString *) value {
 	[self replaceCharactersInRange:NSMakeRange(0, 0) withString:value];
 }
-
 - (void) insert:(NSString *) value atEachLineOfSelectionWithDirection:(NSInteger) direction {
-	NSRange selection,selected = [self selectedRange];
+
+	NSRange selection,selected = self.selectedRange;
 	NSString *remove = value;
-	if ([value isEqualToString:@"\t"]) {
-		remove = @"\\s";
-	}
-	
-	if (direction == DIRECTION_LEFT && ![self eachLineOfSelectionBeginsWith:remove]) 
-		return;
-			
-	NSString *string = [self string];
-	NSInteger valueLen = [value length];		
-	selection = [string paragraphRangeForRange:selected];
-	NSMutableString *update = [NSMutableString string];
+	if ([value isEqualToString:@"\t"]) remove = @"\\s";
+	if (direction == DIRECTION_LEFT && ![self eachLineOfSelectionBeginsWith:remove])  return;
+	NSString *string 		= self.string;
+	NSInteger valueLen 	= value.length;		
+	selection 				= [string paragraphRangeForRange:selected];
+	NSMutableString *update = NSMutableString.new;
 	__block NSRange updatedRange = selection;
-	if (selection.location != NSNotFound) {
-		[string enumerateSubstringsInRange:selection options:NSStringEnumerationByLines usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
-			if (direction == DIRECTION_RIGHT) {
-				updatedRange.length += valueLen;
-				[update appendFormat:@"%@%@\n",value,substring];
-			} else {
-				NSRange f = [substring rangeOfString:[NSString stringWithFormat:@"^%@",remove] options:NSRegularExpressionSearch];
-				if (f.location != NSNotFound) {
-					updatedRange.length -= f.length;
-					[update appendFormat:@"%@\n",[substring stringByReplacingCharactersInRange:f withString:@""]];
-				} else {
-					[update appendFormat:@"%@\n",substring];
-				}
+	if (selection.location == NSNotFound) return;
+	[string enumerateSubstringsInRange:selection options:NSStringEnumerationByLines usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+		if (direction == DIRECTION_RIGHT) {
+			updatedRange.length += valueLen;
+			[update appendFormat:@"%@%@\n",value,substring];
+		} else {
+			NSRange f = [substring rangeOfString:[NSString stringWithFormat:@"^%@",remove] options:NSRegularExpressionSearch];
+			if (f.location == NSNotFound) [update appendFormat:@"%@\n",substring];
+			else {
+				updatedRange.length -= f.length;
+				[update appendFormat:@"%@\n",
+					[substring stringByReplacingCharactersInRange:f withString:@""]];
 			}
-		}];
-		
-		[self replaceCharactersInRange:selection withString:update];
-		selection = [string paragraphRangeForRange:updatedRange];
-		[self setSelectedRange:selection];
-	}
+		}
+	}];
+	[self replaceCharactersInRange:selection withString:update];
+	selection = [string paragraphRangeForRange:updatedRange];
+	[self setSelectedRange:selection];
 }
 //- (void) replaceCharactersInRange:(NSRange)range withString:(NSString *)aString {
 //	[super replaceCharactersInRange:range withString:aString];
@@ -342,34 +334,25 @@
 	}
 }
 
-- (void)showFindIndicatorForRange:(NSRange)charRange {
-	[super showFindIndicatorForRange:charRange];
-}
+- (void)showFindIndicatorForRange:(NSRange)charRange {	[super showFindIndicatorForRange:charRange];	}
 
 - (NSRange) visibleRange {
-    NSRect visibleRect = [self visibleRect];
-    NSLayoutManager *lm = [self layoutManager];
-    NSTextContainer *tc = [self textContainer];
+
+    NSRange glyphVisibleRange = [self.layoutManager glyphRangeForBoundingRect:self.visibleRect inTextContainer:self.textContainer];;
+    return [self.layoutManager characterRangeForGlyphRange:glyphVisibleRange  actualGlyphRange:nil];
     
-    NSRange glyphVisibleRange = [lm glyphRangeForBoundingRect:visibleRect inTextContainer:tc];;
-    NSRange charVisibleRange = [lm characterRangeForGlyphRange:glyphVisibleRange  actualGlyphRange:nil];
-    return charVisibleRange;
 }
 
 - (void) clearColors:(NSRange) area{	
-	NSLayoutManager *lm = [self.textStorage layoutManagers][0];
-	[lm setTemporaryAttributes:colorAttr[TEXT_COLOR_IDX] forCharacterRange:area];
+	[(NSLayoutManager*)self.textStorage.layoutManagers[0] setTemporaryAttributes:colorAttr[TEXT_COLOR_IDX] forCharacterRange:area];
 }
 
 - (void) color:(NSRange) range withColor:(unsigned char) color{
-	NSLayoutManager *lm = [self.textStorage layoutManagers][0];
-	[lm setTemporaryAttributes:colorAttr[color] forCharacterRange:range];
+	[(NSLayoutManager*)self.textStorage.layoutManagers[0] setTemporaryAttributes:colorAttr[color] forCharacterRange:range];
 }
-- (void) delayedParse {
-	[parser parse:self];
-}
-- (NSArray *) completionsForPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index {
-	NSString *part = [[self string] substringWithRange:charRange];
-	return [parser hash_to_array:part];
+- (void) delayedParse {		[parser parse:self];	}
+- (NSArray *) completionsForPartialWordRange:(NSRange)charRange 
+								 indexOfSelectedItem:(NSInteger *)index {
+	return [parser hash_to_array:[self.string substringWithRange:charRange]];
 }
 @end

@@ -2,19 +2,20 @@
 #import <objc/message.h>
 @implementation FileWatcher
 @synthesize ex,list,wakeup;
-static FileWatcher *singleton = nil;
-+ (FileWatcher *) shared {
-	if (!singleton) {
-		singleton = [[FileWatcher alloc] init];
-		if (singleton) {
-			singleton.ex = [[NSLock alloc] init];
-			singleton.list = [[NSMutableDictionary alloc] init];
-			singleton.wakeup = [[[Preferences defaultDir] stringByExpandingTildeInPath] stringByAppendingPathComponent:@"TEXTY_KQUEUE_WAKEUP.txt"];
-			[singleton watch:[NSURL fileURLWithPath:singleton.wakeup] notify:singleton];
-			[singleton performSelectorInBackground:@selector(start) withObject:nil];
-		}
+
+static FileWatcher *shared = nil;
+
++ (instancetype) sharedInstance {
+
+	if (![self hasSharedInstance]) {
+		[self setSharedInstance:shared = self.instance];
+		shared.ex = NSLock.alloc.init;
+		shared.list = NSMutableDictionary.new;
+		shared.wakeup = [Preferences.defaultDir.stringByExpandingTildeInPath stringByAppendingPathComponent:@"TEXTY_KQUEUE_WAKEUP.txt"];
+		[shared watch:[NSURL fileURLWithPath:shared.wakeup] notify:shared];
+		[shared performSelectorInBackground:@selector(start) withObject:nil];
 	}
-	return singleton;
+	return shared;
 }
 - (void) change:(NSInteger) ident {
 	id notify = nil;

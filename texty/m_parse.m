@@ -306,7 +306,7 @@ do {	_b 						= &_syntax_blocks.b[_begin];						\
 		_syntax_var_symbol[i].required_len = 2;
 	}
 	bzero(&_syntax_blocks, sizeof(_syntax_blocks));
-	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"SyntaxDef" ofType:@"plist"]];
+	NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"SyntaxDef" ofType:@"plist"]];
 	NSDictionary *item,*keywords;
 	NSString *value;
 	if ((item = d[ext])) {
@@ -335,7 +335,7 @@ do {	_b 						= &_syntax_blocks.b[_begin];						\
 		}
 	}
 	struct block *b;	
-	if ([self ext:ext is:@"c h"]) {
+	if ([self ext:ext is:@"c h m"]) {
 		SET_BLOCK(b,'*', '/', '/', '*', COMMENT_COLOR_IDX, B_NO_KEYWORD);
 		SET_BLOCK(b,'/', '/', 0, 0, COMMENT_COLOR_IDX, (B_ENDS_WITH_NEW_LINE | B_NO_KEYWORD))
 		SET_BLOCK(b,'#', 0, 0, 0, PREPROCESS_COLOR_IDX, (B_ENDS_WITH_NEW_LINE | B_NO_KEYWORD))
@@ -373,9 +373,10 @@ do {	_b 						= &_syntax_blocks.b[_begin];						\
 - (void) parseNSRange:(NSRange) area inTextView:(STextView *)tv {
 	[tv clearColors:area];
 	[self highlight:area inTextView:tv];
+	[[NSNotificationCenter defaultCenter]postNotification:[NSNotification notificationWithName:@"ParsingDidFinishForTextView" object:tv]];
 }
 - (void) parse:(STextView *) tv {
-	[self parseNSRange:[tv visibleRange] inTextView:tv];	
+	[self parseNSRange:tv.visibleRange inTextView:tv];	
 }
 #pragma mark textView proto
 - (void) dealloc {

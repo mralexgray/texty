@@ -6,3 +6,7 @@
 *.xcscheme
 
 texty.xcodeproj/xcuserdata/localadmin.xcuserdatad/xcschemes/xcschememanagement.plist
+
+.DS_Store
+
+*.xcbkptlist

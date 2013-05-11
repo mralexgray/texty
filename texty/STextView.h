@@ -3,9 +3,10 @@
 #import "Preferences.h"
 @class m_parse;
 #import "m_parse.h"
+#import <AtoZ/AtoZ.h>
 
 @interface STextView : NSTextView {
-	NSBox *_box;
+	BGHUDBox *_box;
 	BOOL _auto_indent;
 	NSUndoManager *um;
 	m_parse *parser;
@@ -20,8 +21,8 @@
 - (NSRange) rangeOfLine:(NSInteger) requested_line;
 - (NSRange) visibleRange;
 - (void) delayedParse;
-@property (retain) NSBox *_box;
+@property (strong) BGHUDBox *_box;
 @property (assign) BOOL _auto_indent;
-@property (retain) NSUndoManager *um;
-@property (retain) m_parse *parser;
+@property (strong) NSUndoManager *um;
+@property (strong) m_parse *parser;
 @end

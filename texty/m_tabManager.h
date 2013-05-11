@@ -2,8 +2,10 @@
 #import "m_exec.h"
 #import "TextVC.h"
 #import "Preferences.h"
+#import <AtoZ/AtoZ.h>
+
 @interface m_tabManager : NSObject <NSTabViewDelegate,NSMenuDelegate> {
-	NSTabView *tabView;
+	BGHUDTabView *tabView;
 	NSWindow * IBOutlet goto_window;
 	NSTimer *timer;
 	NSArray *snipplet;
@@ -39,8 +41,8 @@
 - (NSInteger) getTabIndex:(int) direction;
 - (void)swapTab:(NSInteger) first With:(NSInteger) second;
 - (void) stopAllTasks:(id) sender;
-@property (retain) NSTabView *tabView;
-@property (retain) NSTimer *timer;
-@property (retain) NSArray *snipplet;
-@property (assign) NSWindow *goto_window;
+@property (strong) BGHUDTabView *tabView;
+@property (strong) NSTimer *timer;
+@property (strong) NSArray *snipplet;
+@property (weak) NSWindow *goto_window;
 @end

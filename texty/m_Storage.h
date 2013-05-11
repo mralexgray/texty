@@ -13,11 +13,11 @@ BOOL ask(NSString *title,NSString *what);
 	NSStringEncoding encoding;
 	id <m_StorageDelegate> delegate;
 }
-@property (nonatomic, assign) id <m_StorageDelegate> delegate;
-@property (retain) NSURL *fileURL;
-@property (retain) NSString *data;
+@property (nonatomic, unsafe_unretained) id <m_StorageDelegate> delegate;
+@property (strong) NSURL *fileURL;
+@property (strong) NSString *data;
 @property (assign) BOOL temporary;
-@property (retain) NSArray *existing_backups;
+@property (strong) NSArray *existing_backups;
 @property (assign) NSStringEncoding encoding;
 - (BOOL) open:(NSURL *) URL;
 - (BOOL) close:(BOOL) save;
